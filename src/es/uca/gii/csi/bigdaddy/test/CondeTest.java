@@ -11,9 +11,6 @@ import es.uca.gii.csi.bigdaddy.data.Conde;
 import es.uca.gii.csi.bigdaddy.data.Data;
 import org.junit.Assert;
 
-
-// preguntar cómo hacer los test de constructor, update y delete
-// en los casos en los que se lanzaría una excepción
 public class CondeTest {
 
 	@BeforeClass
