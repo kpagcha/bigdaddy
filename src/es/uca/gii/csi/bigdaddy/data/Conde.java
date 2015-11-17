@@ -138,8 +138,8 @@ public class Conde {
 	 */
 	public void Update() throws Exception {
 		if (_bIsDeleted)
-			throw new Exception("El registro no puede ser actualizado. Ya fue borrado.");
-		
+			throw new Exception("El registro no puede ser actualizado porque ha sido borrado");
+	
 		Connection con = null;
 		
 		try {
@@ -153,7 +153,8 @@ public class Conde {
 					"ordenDinastico = " + _iOrdenDinastico + " " +
 					"where id = " + _iId;
 			
-			con.createStatement().executeUpdate(sUpdate);
+			if (con.createStatement().executeUpdate(sUpdate) == 0)
+				throw new Exception("El registro no puede ser actualizado porque no existe.");
 		} finally {
 			if (con != null) con.close();
 		}

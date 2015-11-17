@@ -40,6 +40,12 @@ public class CondeTest {
 				Assert.assertEquals(rs.getString(2), conde.getDinastia());
 				Assert.assertEquals(rs.getInt(3), conde.getOrdenDinastico());
 			}
+			
+			try {
+				conde = new Conde(0);
+			} catch(Exception e) {
+				Assert.assertEquals("El registro con la id=0 no existe", e.getMessage());
+			}
 		} finally {
 			if (con != null) con.close();
 			if (rs != null) rs.close();
@@ -111,6 +117,15 @@ public class CondeTest {
 		Assert.assertEquals(iOrdenDinastico, conde.getOrdenDinastico());
 			
 		conde.Delete();
+		
+
+		conde = Conde.Create("Vladimir", "Putin", 1);
+		conde.Delete();
+		try {
+			conde.Update();
+		} catch(Exception e) {
+			Assert.assertEquals("El registro no puede ser actualizado porque ha sido borrado", e.getMessage());
+		}
 	}
 	
 	@Test
@@ -128,5 +143,11 @@ public class CondeTest {
 		List<Conde> aResultadoBusqueda = Conde.Select(sNombre, sDinastia, iOrdenDinastico);
 
 		Assert.assertEquals(0, aResultadoBusqueda.size());
+		
+		try {
+			conde.Delete();
+		} catch(Exception e) {
+			Assert.assertEquals("El registro ya fue borrado", e.getMessage());
+		}
 	}
 }
