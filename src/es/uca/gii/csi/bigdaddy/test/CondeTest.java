@@ -11,6 +11,9 @@ import es.uca.gii.csi.bigdaddy.data.Conde;
 import es.uca.gii.csi.bigdaddy.data.Data;
 import org.junit.Assert;
 
+
+// preguntar cómo hacer los test de constructor, update y delete
+// en los casos en los que se lanzaría una excepción
 public class CondeTest {
 
 	@BeforeClass
@@ -63,25 +66,34 @@ public class CondeTest {
 	public void testSelect() throws Exception {
 		List<Conde> aResultadoBusqueda1 = Conde.Select(null, null, null);
 		
+		Assert.assertEquals(2, aResultadoBusqueda1.size());
+		
 		Conde conde1 = aResultadoBusqueda1.get(0);
 		Conde conde2 = aResultadoBusqueda1.get(1);
 		
 		Assert.assertEquals("Vladimir", conde1.getNombre());
 		Assert.assertEquals("Dimitri", conde2.getNombre());
 		
-		List<Conde> aResultadoBusqueda2 = Conde.Select("Vladimir", null, 4);
+		List<Conde> aResultadoBusqueda2 = Conde.Select("adimi", null, 4);
+		
+		Assert.assertEquals(1, aResultadoBusqueda2.size());
 		
 		Conde conde3 = aResultadoBusqueda2.get(0);
 		
 		Assert.assertEquals("Vladimir", conde3.getNombre());
 		Assert.assertEquals("Dracula", conde3.getDinastia());
 		Assert.assertEquals(4, conde3.getOrdenDinastico());
+		
+		List<Conde> aResultadoBusqueda3 = Conde.Select("Jesulin", "de Ubrique", 1);
+		
+		Assert.assertEquals(0, aResultadoBusqueda3.size());
 	}
 	
 	@Test
 	public void testUpdate() throws Exception {
 		Conde conde = Conde.Create("Igor", "Dracula", 3);
 		
+		int iId = conde.getId();
 		String sNombre = "Vladimir Vladimirovich";
 		String sDinastia = "Morozhenoe";
 		int iOrdenDinastico = 1;
@@ -92,10 +104,12 @@ public class CondeTest {
 		
 		conde.Update();
 		
+		conde = new Conde(iId);
+		
 		Assert.assertEquals(sNombre, conde.getNombre());
 		Assert.assertEquals(sDinastia, conde.getDinastia());
 		Assert.assertEquals(iOrdenDinastico, conde.getOrdenDinastico());
-		
+			
 		conde.Delete();
 	}
 	

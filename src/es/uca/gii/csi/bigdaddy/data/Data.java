@@ -39,12 +39,13 @@ public class Data {
      */
     public static String String2Sql(String s, boolean bAddQuotes, boolean bAddWildcards) {
     	s = s.replace("'", "''");
-    	if (bAddWildcards) {
+    	
+    	if (bAddWildcards)
     		s = "%" + s + "%";
-    	}
-    	if (bAddQuotes) {
+    	
+    	if (bAddQuotes)
     		s = "'" + s + "'";
-    	}
+    	
     	return s;
     }
     
@@ -64,9 +65,10 @@ public class Data {
     public static String Date2Sql(Date dt, boolean bAddQuotes) {
     	SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
     	String s = sdf.format(dt);
-    	if (bAddQuotes) {
+    	
+    	if (bAddQuotes)
     		s = "'" + s + "'";
-    	}
+    	
     	return s;
     }
     
@@ -76,14 +78,17 @@ public class Data {
      * @throws SQLException si falla la consulta
      * @throws IOException si falla la apertura o lectura del fichero de configuración
      */
-    public static int LastId(Connection con) throws SQLException, IOException {
-    	int iId = -1;
+    public static int LastId(Connection con) throws IOException, SQLException {
+    	ResultSet rs = null;
     	
-    	Properties properties = Config.Properties(getPropertiesUrl());
-    	ResultSet rs = con.createStatement().executeQuery(properties.getProperty("jdbc.lastIdSentence"));
-		if (rs.next()) {
-			iId = rs.getInt(1);
-		}
-    	return iId;
+    	try {
+    		Properties properties = Config.Properties(getPropertiesUrl());
+    		rs = con.createStatement().executeQuery(properties.getProperty("jdbc.lastIdSentence"));
+    		
+    		rs.next();
+    		return rs.getInt(1);
+    	} finally {
+    		if (rs != null) rs.close();
+    	}
     }
 }

@@ -30,13 +30,13 @@ public class Conde {
 			rs = con.createStatement().executeQuery(sConsulta);
 			
 			if (rs.next()) {
+				_iId = iId;
 				_sNombre = rs.getString(1);
 				_sDinastia = rs.getString(2);
 				_iOrdenDinastico = rs.getInt(3);
 			} else {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
-			_iId = iId;
 		} finally {
 			if (con != null) con.close();
 			if (rs != null) rs.close();
@@ -81,8 +81,6 @@ public class Conde {
 	 * @throws Exception si falla la conexión con la base de datos
 	 */
 	public static Conde Create(String sNombre, String sDinastia, int iOrdenDinastico) throws Exception {
-		Conde conde = null;
-		
 		Connection con = null;
 		ResultSet rs = null;
 		
@@ -98,14 +96,11 @@ public class Conde {
 			
 			con.createStatement().executeUpdate(sInsert);
 			
-			int iLastId = Data.LastId(con);
-			conde = new Conde(iLastId);
+			return new Conde(Data.LastId(con));
 		} finally {
 			if (con != null) con.close();
 			if (rs != null) rs.close();
 		}
-		
-		return conde;
 	}
 	
 	/**
@@ -115,9 +110,9 @@ public class Conde {
 	 * la sentencia en la base de datos
 	 */
 	public void Delete() throws Exception {
-		if (_bIsDeleted) {
+		if (_bIsDeleted)
 			throw new Exception("El registro ya fue borrado");
-		}
+		
 		Connection con = null;
 		
 		try {
@@ -142,9 +137,9 @@ public class Conde {
 	 * la sentencia en la base de datos
 	 */
 	public void Update() throws Exception {
-		if (_bIsDeleted) {
+		if (_bIsDeleted)
 			throw new Exception("El registro no puede ser actualizado. Ya fue borrado.");
-		}
+		
 		Connection con = null;
 		
 		try {
@@ -166,12 +161,12 @@ public class Conde {
 	
 	/**
 	 * Búsqueda de entidades Conde que cumplen las valores de los argumentos
-	 * por los que se busca
+	 * por los que se quiere filtrar
 	 * @param sNombre si es null no se incluirá en la búsqueda
 	 * @param sDinastia si es null no se incluirá en la búsqueda
 	 * @param iOrdenDinastico si es null no se incluirá en la búsqueda
 	 * @return lista de entidad Conde
-	 * @throws Exception
+	 * @throws Exception si falla la consulta o la conexión con la base de datos
 	 */
 	public static List<Conde> Select(String sNombre, String sDinastia, Integer iOrdenDinastico) throws Exception {
 		List<Conde> aResultadoBusqueda = new ArrayList<Conde>();
@@ -210,18 +205,18 @@ public class Conde {
 	private static String Where(String sNombre, String sDinastia, Integer iOrdenDinastico) {
 		StringBuilder sbWhere = new StringBuilder();
 		
-		if (sNombre != null) {
+		if (sNombre != null)
 			sbWhere.append("nombre like " + Data.String2Sql(sNombre, true, true) + " and ");
-		}
-		if (sDinastia != null) {
+		
+		if (sDinastia != null)
 			sbWhere.append("dinastia like " + Data.String2Sql(sDinastia, true, true) + " and ");
-		}
-		if (iOrdenDinastico != null) {
+		
+		if (iOrdenDinastico != null)
 			sbWhere.append("ordenDinastico = " + iOrdenDinastico.intValue() + " and ");
-		}
-		if (sbWhere.length() > 0) {
+		
+		if (sbWhere.length() > 0)
 			return "where " + sbWhere.substring(0, sbWhere.length()-5);
-		}
+		
 		return "";
 	}
 }
