@@ -23,6 +23,7 @@ public class IfrConde extends JInternalFrame {
 	private JTextField txtDinastia;
 	private JTextField txtOrdenDinastico;
 	private JButton butGuardar;
+	
 	private Conde _conde = null;
 	
 	/**
@@ -108,7 +109,7 @@ public class IfrConde extends JInternalFrame {
 						_conde.Update();
 					}
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Se ha producido un error en la base de datos.");
+					JOptionPane.showMessageDialog(null, "Se ha producido un error en la base de datos");
 				}
 			}
 		});
