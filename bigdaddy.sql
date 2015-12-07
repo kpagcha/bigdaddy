@@ -14,12 +14,12 @@ CREATE TABLE IF NOT EXISTS `conde` (
   `nombre` varchar(64) NOT NULL,
   `dinastia` varchar(64) NOT NULL,
   `ordenDinastico` int(11) NOT NULL,
-  `id_EsatusSocial` int(64) DEFAULT NULL COMMENT 'Clave foranea de tabla estatussocial',
+  `id_EstatusSocial` int(64) DEFAULT NULL COMMENT 'Clave foranea de tabla estatussocial',
   PRIMARY KEY (`id`),
   KEY `estatus` (`id_EstatusSocial`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
-INSERT INTO `conde` (`id`, `nombre`, `dinastia`, `ordenDinastico`, `id_EsatusSocial`) VALUES
+INSERT INTO `conde` (`id`, `nombre`, `dinastia`, `ordenDinastico`, `id_EstatusSocial`) VALUES
 (1, 'Vladimir', 'Dracula', 4, 1),
 (2, 'Dimitri', 'Dracula', 5, 1);
 
@@ -36,7 +36,7 @@ INSERT INTO `estatussocial` (`id`, `nombre`) VALUES
 
 
 ALTER TABLE `conde`
-  ADD CONSTRAINT `conde_ibfk_1` FOREIGN KEY (`id_EsatusSocial`) REFERENCES `estatussocial` (`id`);
+  ADD CONSTRAINT `conde_ibfk_1` FOREIGN KEY (`id_EstatusSocial`) REFERENCES `estatussocial` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
