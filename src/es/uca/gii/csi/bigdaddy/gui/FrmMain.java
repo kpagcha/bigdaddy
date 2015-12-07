@@ -62,8 +62,8 @@ public class FrmMain {
 		JMenuItem mitNuevoConde = new JMenuItem("Conde");
 		mitNuevoConde.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				IfrConde ifrConde = new IfrConde();
-				ifrConde.setBounds(20, 20, 470, 210);
+				IfrConde ifrConde = new IfrConde(null);
+				ifrConde.setBounds(20, 20, 470, 250);
 				frame.getContentPane().add(ifrConde);
 				ifrConde.setVisible(true);
 			}
@@ -74,6 +74,14 @@ public class FrmMain {
 		menuBar.add(mitBuscar);
 		
 		JMenuItem mitBuscarConde = new JMenuItem("Conde");
+		mitBuscarConde.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				IfrCondes ifrCondes = new IfrCondes(frame);
+				ifrCondes.setBounds(20, 20, 470, 210);
+				frame.getContentPane().add(ifrCondes, 0);
+				ifrCondes.setVisible(true);
+			}
+		});
 		mitBuscar.add(mitBuscarConde);
 		frame.getContentPane().setLayout(null);
 	}

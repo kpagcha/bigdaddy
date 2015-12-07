@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import es.uca.gii.csi.bigdaddy.data.Conde;
 import es.uca.gii.csi.bigdaddy.data.Data;
+import es.uca.gii.csi.bigdaddy.data.EstatusSocial;
+
 import org.junit.Assert;
 
 public class CondeTest {
@@ -55,8 +57,9 @@ public class CondeTest {
 		String sNombre = "Boris";
 		String sDinastia = "Putin";
 		int iOrdenDinastico = 9;
+		EstatusSocial estatusSocial = new EstatusSocial(1);
 		
-		Conde conde = Conde.Create(sNombre, sDinastia, iOrdenDinastico);
+		Conde conde = Conde.Create(sNombre, sDinastia, iOrdenDinastico, estatusSocial);
 		
 		Assert.assertEquals(sNombre, conde.getNombre());
 		Assert.assertEquals(sDinastia, conde.getDinastia());
@@ -67,7 +70,7 @@ public class CondeTest {
 	
 	@Test
 	public void testSelect() throws Exception {
-		List<Conde> aResultadoBusqueda1 = Conde.Select(null, null, null);
+		List<Conde> aResultadoBusqueda1 = Conde.Select(null, null, null, null);
 		
 		Assert.assertEquals(2, aResultadoBusqueda1.size());
 		
@@ -77,7 +80,7 @@ public class CondeTest {
 		Assert.assertEquals("Vladimir", conde1.getNombre());
 		Assert.assertEquals("Dimitri", conde2.getNombre());
 		
-		List<Conde> aResultadoBusqueda2 = Conde.Select("adimi", null, 4);
+		List<Conde> aResultadoBusqueda2 = Conde.Select("adimi", null, 4, null);
 		
 		Assert.assertEquals(1, aResultadoBusqueda2.size());
 		
@@ -87,23 +90,35 @@ public class CondeTest {
 		Assert.assertEquals("Dracula", conde3.getDinastia());
 		Assert.assertEquals(4, conde3.getOrdenDinastico());
 		
-		List<Conde> aResultadoBusqueda3 = Conde.Select("Jesulin", "de Ubrique", 1);
+		List<Conde> aResultadoBusqueda3 = Conde.Select("Jesulin", "de Ubrique", 1, null);
 		
 		Assert.assertEquals(0, aResultadoBusqueda3.size());
+		
+		List<Conde> aResultadoBusqueda4 = Conde.Select(null, null, null, "Noble");
+		
+		Assert.assertEquals(2, aResultadoBusqueda4.size());
+		
+		Conde conde4 = aResultadoBusqueda4.get(0);
+		Conde conde5 = aResultadoBusqueda4.get(1);
+		
+		Assert.assertEquals("Vladimir", conde4.getNombre());
+		Assert.assertEquals("Dimitri", conde5.getNombre());
 	}
 	
 	@Test
 	public void testUpdate() throws Exception {
-		Conde conde = Conde.Create("Igor", "Dracula", 3);
+		Conde conde = Conde.Create("Igor", "Dracula", 3, new EstatusSocial(1));
 		
 		int iId = conde.getId();
 		String sNombre = "Vladimir Vladimirovich";
 		String sDinastia = "Morozhenoe";
 		int iOrdenDinastico = 1;
+		EstatusSocial estatusSocial = new EstatusSocial(3);
 		
 		conde.setNombre(sNombre);
 		conde.setDinastia(sDinastia);
 		conde.setOrdenDinastico(iOrdenDinastico);
+		conde.setEstatusSocial(estatusSocial);
 		
 		conde.Update();
 		
@@ -112,11 +127,11 @@ public class CondeTest {
 		Assert.assertEquals(sNombre, conde.getNombre());
 		Assert.assertEquals(sDinastia, conde.getDinastia());
 		Assert.assertEquals(iOrdenDinastico, conde.getOrdenDinastico());
+		Assert.assertEquals("Monarca", conde.getEstatusSocial().getNombre());
 			
 		conde.Delete();
 		
-
-		conde = Conde.Create("Vladimir", "Putin", 1);
+		conde = Conde.Create("Vladimir", "Putin", 1, new EstatusSocial(1));
 		conde.Delete();
 		try {
 			conde.Update();
@@ -130,14 +145,15 @@ public class CondeTest {
 		String sNombre = "Anton";
 		String sDinastia = "Burov";
 		int iOrdenDinastico = 4;
+		EstatusSocial estatusSocial = new EstatusSocial(3);
 		
-		Conde conde = Conde.Create(sNombre, sDinastia, iOrdenDinastico);
+		Conde conde = Conde.Create(sNombre, sDinastia, iOrdenDinastico, estatusSocial);
 		
 		conde.Delete();
 		
 		Assert.assertEquals(true, conde.getIsDeleted());
 		
-		List<Conde> aResultadoBusqueda = Conde.Select(sNombre, sDinastia, iOrdenDinastico);
+		List<Conde> aResultadoBusqueda = Conde.Select(sNombre, sDinastia, iOrdenDinastico, estatusSocial.getNombre());
 
 		Assert.assertEquals(0, aResultadoBusqueda.size());
 		

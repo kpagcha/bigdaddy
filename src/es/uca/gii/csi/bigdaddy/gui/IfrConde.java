@@ -1,13 +1,12 @@
 package es.uca.gii.csi.bigdaddy.gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
 import es.uca.gii.csi.bigdaddy.data.Conde;
+import es.uca.gii.csi.bigdaddy.data.EstatusSocial;
 
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JLabel;
@@ -16,43 +15,30 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class IfrConde extends JInternalFrame {
+	
 	private static final long serialVersionUID = 1L;
 	private JTextField txtNombre;
 	private JTextField txtDinastia;
 	private JTextField txtOrdenDinastico;
 	private JButton butGuardar;
-	
 	private Conde _conde = null;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					IfrConde frame = new IfrConde();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JLabel lblEstatusSocial;
+	private JComboBox<EstatusSocial> cmbEstatusSocial;
 
 	/**
 	 * Create the frame.
 	 */
-	public IfrConde() {
+	public IfrConde(Conde conde) {
 		setClosable(true);
 		setResizable(true);
 		setTitle("Conde");
 		setBounds(100, 100, 650, 400);
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("428px"),},
+				ColumnSpec.decode("428px:grow"),},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("14px"),
@@ -66,6 +52,8 @@ public class IfrConde extends JInternalFrame {
 				RowSpec.decode("14px"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("20px"),
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -99,22 +87,49 @@ public class IfrConde extends JInternalFrame {
 					String sNombre = txtNombre.getText();
 					String sDinastia = txtDinastia.getText();
 					int iOrdenDinastico = Integer.parseInt(txtOrdenDinastico.getText());
+					Object oSelection = cmbEstatusSocial.getModel().getSelectedItem();
 					
-					if (_conde == null) {
-						_conde = Conde.Create(sNombre, sDinastia, iOrdenDinastico);
+					if (oSelection == null) {
+						JOptionPane.showMessageDialog(null, "Se debe seleccionar un estatus social para guardar.");
 					} else {
-						_conde.setNombre(sNombre);
-						_conde.setDinastia(sDinastia);
-						_conde.setOrdenDinastico(iOrdenDinastico);
-						_conde.Update();
+						EstatusSocial estatusSocial = (EstatusSocial)oSelection;
+						if (_conde == null) {
+							_conde = Conde.Create(sNombre, sDinastia, iOrdenDinastico, estatusSocial);
+						} else {
+							_conde.setNombre(sNombre);
+							_conde.setDinastia(sDinastia);
+							_conde.setOrdenDinastico(iOrdenDinastico);
+							_conde.setEstatusSocial(estatusSocial);
+							_conde.Update();
+						}
 					}
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Se ha producido un error en la base de datos");
 				}
 			}
-		});
-		getContentPane().add(butGuardar, "2, 14, left, default");
-
+		});		
+		
+		if (conde != null) {
+			_conde = conde;
+			txtNombre.setText(conde.getNombre());
+			txtDinastia.setText(conde.getDinastia());
+			txtOrdenDinastico.setText(Integer.toString(conde.getOrdenDinastico()));
+		}
+		
+		lblEstatusSocial = new JLabel("Estatus social");
+		getContentPane().add(lblEstatusSocial, "2, 14, left, default");
+		
+		cmbEstatusSocial = new JComboBox<EstatusSocial>();
+		try {
+			cmbEstatusSocial.setModel(new EstatusSocialListModel(EstatusSocial.Select()));
+			if (_conde != null)
+				cmbEstatusSocial.getModel().setSelectedItem(_conde.getEstatusSocial());
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Se ha producido un error en la base de datos. No se han podido cargar las opciones");
+		}
+		
+		getContentPane().add(cmbEstatusSocial, "2, 16, fill, default");
+		getContentPane().add(butGuardar, "2, 18, left, default");
 	}
 
 }
