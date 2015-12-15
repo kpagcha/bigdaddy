@@ -5,8 +5,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EstatusSocial {
-	private int _iId;
+public class EstatusSocial extends Entidad {
 	private String _sNombre;
 	
 	/**
@@ -14,8 +13,24 @@ public class EstatusSocial {
 	 * @throws Exception si falla la conexión con la base de datos
 	 * o el registro con la id iId no existe
 	 */
+	public EstatusSocial(int iId, Connection connection) throws Exception {
+		super(iId, "estatussocial");
+		Initialize(iId, connection);
+	}
+	
 	public EstatusSocial(int iId) throws Exception {
-		Connection con = null;
+		super(iId, "estatussocial");
+		Initialize(iId, null);
+	}
+	
+	private EstatusSocial(int iId, String sNombre) {
+		super(iId, "estatussocial");
+		_sNombre = sNombre;
+	}
+	
+	private void Initialize(int iId, Connection connection) throws Exception {
+		
+		Connection con = connection;
 		ResultSet rs = null;
 		
 		try {
@@ -27,8 +42,7 @@ public class EstatusSocial {
 			rs = con.createStatement().executeQuery(sConsulta);
 			
 			if (rs.next()) {
-				_iId = iId;
-				_sNombre = rs.getString(1);
+				_sNombre = rs.getString("nombre");
 			} else {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
@@ -36,10 +50,6 @@ public class EstatusSocial {
 			if (con != null) con.close();
 			if (rs != null) rs.close();
 		}
-	}
-	
-	public int getId() {
-		return _iId;
 	}
 	
 	public String getNombre() {
@@ -69,12 +79,12 @@ public class EstatusSocial {
 			
 			con = Data.Connection();
 			
-			String sSelect = "select id from bigdaddy.estatussocial order by nombre asc";
+			String sSelect = "select id, nombre from bigdaddy.estatussocial order by nombre asc";
 					
 			rs = con.createStatement().executeQuery(sSelect);
 			
 			while (rs.next()) {
-				EstatusSocial estatusSocial = new EstatusSocial(rs.getInt(1));
+				EstatusSocial estatusSocial = new EstatusSocial(rs.getInt("id"), rs.getString("nombre"));
 				aResultadoBusqueda.add(estatusSocial);
 			}
 			

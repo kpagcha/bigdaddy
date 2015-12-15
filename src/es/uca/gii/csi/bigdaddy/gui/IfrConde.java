@@ -103,8 +103,14 @@ public class IfrConde extends JInternalFrame {
 							_conde.Update();
 						}
 					}
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Orden dinástico inválido");
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Se ha producido un error en la base de datos");
+					try {
+						JOptionPane.showMessageDialog(null, new String(e.getMessage().getBytes(), "UTF-8"));
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null, "Se ha producido un error inesperado");
+					}
 				}
 			}
 		});		

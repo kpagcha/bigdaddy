@@ -5,20 +5,36 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Conde {
-	private int _iId;
+public class Conde extends Entidad {
 	private String _sNombre;
 	private String _sDinastia;
 	private int _iOrdenDinastico;
 	private EstatusSocial _estatusSocial;
-	private boolean _bIsDeleted = false;
 	
 	
 	/**
 	 * @param iId clave primaria de la tabla conde
 	 * @throws Exception si falla la conexión con la base de datos
 	 */
+	public Conde(int iId, Connection connection) throws Exception {
+		super(iId, "conde");
+		Initialize(iId, connection);
+	}
+	
 	public Conde(int iId) throws Exception {
+		super(iId, "conde");
+		Initialize(iId, null);
+	}
+	
+	private Conde(int iId, String sNombre, String sDinastia, int iOrdenDinastico, EstatusSocial estatusSocial) {
+		super(iId, "conde");
+		_sNombre = sNombre;
+		_sDinastia = sDinastia;
+		_iOrdenDinastico = iOrdenDinastico;
+		_estatusSocial = estatusSocial;
+	}
+	
+	private void Initialize(int iId, Connection connection) throws Exception {
 		Connection con = null;
 		ResultSet rs = null;
 		
@@ -31,11 +47,10 @@ public class Conde {
 			rs = con.createStatement().executeQuery(sConsulta);
 			
 			if (rs.next()) {
-				_iId = iId;
-				_sNombre = rs.getString(1);
-				_sDinastia = rs.getString(2);
-				_iOrdenDinastico = rs.getInt(3);
-				_estatusSocial = new EstatusSocial(rs.getInt(4));
+				_sNombre = rs.getString("nombre");
+				_sDinastia = rs.getString("dinastia");
+				_iOrdenDinastico = rs.getInt("ordenDinastico");
+				_estatusSocial = new EstatusSocial(rs.getInt("id_EstatusSocial"));
 			} else {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
@@ -43,10 +58,6 @@ public class Conde {
 			if (con != null) con.close();
 			if (rs != null) rs.close();
 		}
-	}
-	
-	public int getId() {
-		return _iId;
 	}
 	
 	public String getNombre() {
@@ -79,10 +90,6 @@ public class Conde {
 	
 	public void setEstatusSocial(EstatusSocial estatusSocial) {
 		_estatusSocial = estatusSocial;
-	}
-	
-	public boolean getIsDeleted() {
-		return _bIsDeleted;
 	}
 
 	public String toString() {
@@ -123,32 +130,6 @@ public class Conde {
 	}
 	
 	/**
-	 * Borra el registro de la entidad conde de la base de datos correspondiente
-	 * a la instancia que invoca este método
-	 * @throws Exception si el registro ya fue borrado o falla la ejecución de
-	 * la sentencia en la base de datos
-	 */
-	public void Delete() throws Exception {
-		if (_bIsDeleted)
-			throw new Exception("El registro ya fue borrado");
-		
-		Connection con = null;
-		
-		try {
-			Data.LoadDriver();
-
-			con = Data.Connection();
-			
-			String sDelete = "delete from bigdaddy.conde where id = " + _iId;
-			
-			con.createStatement().executeUpdate(sDelete);
-			_bIsDeleted = true;
-		} finally {
-			if (con != null) con.close();
-		}
-	} 
-	
-	/**
 	 * Actualiza los campos del registro de la entidad conde de la base de datos
 	 * correspondiente a la instancia que invoca este método con los valores actuales
 	 * de los atributos
@@ -156,28 +137,14 @@ public class Conde {
 	 * la sentencia en la base de datos
 	 */
 	public void Update() throws Exception {
-		if (_bIsDeleted)
-			throw new Exception("El registro no puede ser actualizado porque ha sido borrado");
-	
-		Connection con = null;
+		String sUpdate = "update bigdaddy.conde set " +
+				"nombre = " + Data.String2Sql(_sNombre, true, false) + ", " +
+				"dinastia = " + Data.String2Sql(_sDinastia, true, false) + ", " +
+				"ordenDinastico = " + _iOrdenDinastico + ", " +
+				"id_EstatusSocial = " + _estatusSocial.getId() + " " +
+				"where id = " + getId();
 		
-		try {
-			Data.LoadDriver();
-			
-			con = Data.Connection();
-			
-			String sUpdate = "update bigdaddy.conde set " +
-					"nombre = " + Data.String2Sql(_sNombre, true, false) + ", " +
-					"dinastia = " + Data.String2Sql(_sDinastia, true, false) + ", " +
-					"ordenDinastico = " + _iOrdenDinastico + ", " +
-					"id_EstatusSocial = " + _estatusSocial.getId() + " " +
-					"where id = " + _iId;
-			
-			if (con.createStatement().executeUpdate(sUpdate) == 0)
-				throw new Exception("El registro no puede ser actualizado porque no existe.");
-		} finally {
-			if (con != null) con.close();
-		}
+		super.Update(sUpdate);
 	}
 	
 	/**
@@ -201,14 +168,15 @@ public class Conde {
 			
 			con = Data.Connection();
 			
-			String sSelect = "select conde.id from bigdaddy.conde inner join estatussocial on " +
-					"conde.id_EstatusSocial = estatussocial.id " +
+			String sSelect = "select conde.id, conde.nombre, conde.dinastia, conde.ordenDinastico, estatussocial.id " +
+					"from bigdaddy.conde inner join estatussocial on conde.id_EstatusSocial = estatussocial.id " +
 					Where(sNombre, sDinastia, iOrdenDinastico, sEstatusSocial);
 					
 			rs = con.createStatement().executeQuery(sSelect);
 			
 			while (rs.next()) {
-				Conde conde = new Conde(rs.getInt(1));
+				Conde conde = new Conde(rs.getInt("conde.id"), rs.getString("conde.nombre"), rs.getString("conde.dinastia"),
+						rs.getInt("conde.ordenDinastico"), new EstatusSocial(rs.getInt("estatussocial.id"), con));
 				aResultadoBusqueda.add(conde);
 			}
 			
