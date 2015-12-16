@@ -1,6 +1,7 @@
 package es.uca.gii.csi.bigdaddy.data;
 
 import java.sql.Connection;
+import java.sql.Types;
 
 public class Entidad {
 	private final int _iId;
@@ -69,5 +70,53 @@ public class Entidad {
 		} finally {
 			if (con != null) con.close();
 		}
+	}
+	
+	/*private static String Where(String sNombre, String sDinastia, Integer iOrdenDinastico, String sEstatusSocial) {
+		StringBuilder sbWhere = new StringBuilder();
+		
+		if (sNombre != null)
+			sbWhere.append("conde.nombre like " + Data.String2Sql(sNombre, true, true) + " and ");
+		
+		if (sDinastia != null)
+			sbWhere.append("conde.dinastia like " + Data.String2Sql(sDinastia, true, true) + " and ");
+		
+		if (iOrdenDinastico != null)
+			sbWhere.append("conde.ordenDinastico = " + iOrdenDinastico.intValue() + " and ");
+		
+		if (sEstatusSocial != null)
+			sbWhere.append("estatussocial.nombre like " + Data.String2Sql(sEstatusSocial, true, true) + " and ");
+		
+		if (sbWhere.length() > 0)
+			return "where " + sbWhere.substring(0, sbWhere.length()-5);
+		
+		return "";
+	}*/
+	
+	
+	/**
+	 * @param asFields nombre campos de la tabla que compondrán la claúsula where
+	 * @param aiTypes tipos SQL de los campos
+	 * @param aoValues valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
+	 * @return
+	 */
+	protected static String Where(String[] asFields, int[] aiTypes, Object[] aoValues) {
+		StringBuilder sbWhere = new StringBuilder();
+		
+		for (int i = 0; i < asFields.length; i++) {
+			Object o = aoValues[i];
+			if (aoValues[i] != null) {
+				if (aiTypes[i] == Types.VARCHAR)
+					sbWhere.append(asFields[i] + " like " + Data.String2Sql((String)o, true, true));
+				else
+					sbWhere.append(asFields[i] + " = " + o.getClass().cast(o));
+				sbWhere.append(" and ");
+			}
+		}
+		
+		if (sbWhere.length() > 0)
+			return "where " + sbWhere.substring(0, sbWhere.length()-5);
+		
+		return "";
 	}
 }

@@ -2,6 +2,7 @@ package es.uca.gii.csi.bigdaddy.data;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,17 +14,31 @@ public class Conde extends Entidad {
 	
 	
 	/**
-	 * @param iId clave primaria de la tabla conde
-	 * @throws Exception si falla la conexión con la base de datos
+	 * @param iId identificador del Conde en la tabla correspondiente en la base de datos
+	 * @param connection conexión con la base de datos
+	 * @throws Exception si no existe un registro con la id iId
 	 */
 	public Conde(int iId, Connection connection) throws Exception {
 		super(iId, "conde");
 		Initialize(iId, connection);
 	}
 	
+	/**
+	 * @param iId identificador del Conde en la tabla correspondiente en la base de datos
+	 * @throws Exception si no existe un registro con la id iId
+	 */
 	public Conde(int iId) throws Exception {
 		super(iId, "conde");
-		Initialize(iId, null);
+		
+		Connection con = null;
+		try {
+			Data.LoadDriver();
+			con = Data.Connection();
+					
+			Initialize(iId, con);
+		} finally {
+			if (con != null) con.close();
+		}
 	}
 	
 	private Conde(int iId, String sNombre, String sDinastia, int iOrdenDinastico, EstatusSocial estatusSocial) {
@@ -34,18 +49,18 @@ public class Conde extends Entidad {
 		_estatusSocial = estatusSocial;
 	}
 	
+	/**
+	 * Construye una instancia de Conde con los datos obtenidos de la base de datos
+	 * @param iId
+	 * @param connection
+	 * @throws Exception
+	 */
 	private void Initialize(int iId, Connection connection) throws Exception {
-		Connection con = null;
 		ResultSet rs = null;
 		
 		try {
-			if (con == null) {
-				Data.LoadDriver();
-				con = Data.Connection();
-			}
-			
 			String sConsulta = "select nombre, dinastia, ordenDinastico, id_EstatusSocial from bigdaddy.conde where id = " + iId;
-			rs = con.createStatement().executeQuery(sConsulta);
+			rs = connection.createStatement().executeQuery(sConsulta);
 			
 			if (rs.next()) {
 				_sNombre = rs.getString("nombre");
@@ -56,7 +71,6 @@ public class Conde extends Entidad {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
 		} finally {
-			if (con != null && connection == null) con.close();
 			if (rs != null) rs.close();
 		}
 	}
@@ -171,7 +185,10 @@ public class Conde extends Entidad {
 			
 			String sSelect = "select conde.id, conde.nombre, conde.dinastia, conde.ordenDinastico, estatussocial.id " +
 					"from bigdaddy.conde inner join estatussocial on conde.id_EstatusSocial = estatussocial.id " +
-					Where(sNombre, sDinastia, iOrdenDinastico, sEstatusSocial);
+					Where(
+						new String[] { "conde.nombre", "conde.dinastia", "conde.ordenDinastico", "estatussocial.nombre" },
+						new int[] { Types.VARCHAR, Types.VARCHAR, Types.INTEGER, Types.VARCHAR },
+						new Object[] { sNombre, sDinastia, iOrdenDinastico, sEstatusSocial});
 					
 			rs = con.createStatement().executeQuery(sSelect);
 			
@@ -186,34 +203,5 @@ public class Conde extends Entidad {
 			if (con != null) con.close();
 			if (rs != null) rs.close();
 		}
-	}
-	
-	/**
-	 * @param sNombre si es null no se incluirá en la búsqueda
-	 * @param sDinastia si es null no se incluirá en la búsqueda
-	 * @param iOrdenDinastico si es null no se incluirá en la búsqueda
-	 * @param sEstatusSocial si es null no se incluiría en la búsqueda
-	 * @return si todos los argumentos son null cadena vacía, de lo contrario,
-	 * se devuelve la claúsula where formada con los campos a filtrar
-	 */
-	private static String Where(String sNombre, String sDinastia, Integer iOrdenDinastico, String sEstatusSocial) {
-		StringBuilder sbWhere = new StringBuilder();
-		
-		if (sNombre != null)
-			sbWhere.append("conde.nombre like " + Data.String2Sql(sNombre, true, true) + " and ");
-		
-		if (sDinastia != null)
-			sbWhere.append("conde.dinastia like " + Data.String2Sql(sDinastia, true, true) + " and ");
-		
-		if (iOrdenDinastico != null)
-			sbWhere.append("conde.ordenDinastico = " + iOrdenDinastico.intValue() + " and ");
-		
-		if (sEstatusSocial != null)
-			sbWhere.append("estatussocial.nombre like " + Data.String2Sql(sEstatusSocial, true, true) + " and ");
-		
-		if (sbWhere.length() > 0)
-			return "where " + sbWhere.substring(0, sbWhere.length()-5);
-		
-		return "";
 	}
 }

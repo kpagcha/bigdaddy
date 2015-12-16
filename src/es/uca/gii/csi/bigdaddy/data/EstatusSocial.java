@@ -9,18 +9,31 @@ public class EstatusSocial extends Entidad {
 	private String _sNombre;
 	
 	/**
-	 * @param iId clave primaria de la tabla estatussocial
-	 * @throws Exception si falla la conexión con la base de datos
-	 * o el registro con la id iId no existe
+	 * @param iId identificador del EstatusSocial en la tabla correspondiente en la base de datos
+	 * @param connection conexión con la base de datos
+	 * @throws Exception si no existe un registro con la id iId
 	 */
 	public EstatusSocial(int iId, Connection connection) throws Exception {
 		super(iId, "estatussocial");
 		Initialize(iId, connection);
 	}
 	
+	/**
+	 * @param iId identificador del Conde en la tabla correspondiente en la base de datos
+	 * @throws Exception si no existe un registro con la id iId
+	 */
 	public EstatusSocial(int iId) throws Exception {
 		super(iId, "estatussocial");
-		Initialize(iId, null);
+		
+		Connection con = null;
+		try {
+			Data.LoadDriver();
+			con = Data.Connection();
+					
+			Initialize(iId, con);
+		} finally {
+			if (con != null) con.close();
+		}
 	}
 	
 	private EstatusSocial(int iId, String sNombre) {
@@ -28,18 +41,18 @@ public class EstatusSocial extends Entidad {
 		_sNombre = sNombre;
 	}
 	
+	/**
+	 * Construye una instancia de EstatusSocial con los datos obtenidos de la base de datos
+	 * @param iId
+	 * @param connection
+	 * @throws Exception
+	 */
 	private void Initialize(int iId, Connection connection) throws Exception {	
-		Connection con = connection;
 		ResultSet rs = null;
 		
 		try {
-			if (con == null) {
-				Data.LoadDriver();
-				con = Data.Connection();
-			}
-			
 			String sConsulta = "select nombre from bigdaddy.estatussocial where id = " + iId;
-			rs = con.createStatement().executeQuery(sConsulta);
+			rs = connection.createStatement().executeQuery(sConsulta);
 			
 			if (rs.next()) {
 				_sNombre = rs.getString("nombre");
@@ -47,7 +60,6 @@ public class EstatusSocial extends Entidad {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
 		} finally {
-			if (con != null && connection == null) con.close();
 			if (rs != null) rs.close();
 		}
 	}
