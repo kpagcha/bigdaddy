@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `conde` (
   KEY `estatus` (`id_EstatusSocial`),
   KEY `nombre` (`nombre`),
   KEY `dinastia` (`dinastia`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcado de datos para la tabla `conde`

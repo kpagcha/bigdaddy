@@ -72,33 +72,11 @@ public class Entidad {
 		}
 	}
 	
-	/*private static String Where(String sNombre, String sDinastia, Integer iOrdenDinastico, String sEstatusSocial) {
-		StringBuilder sbWhere = new StringBuilder();
-		
-		if (sNombre != null)
-			sbWhere.append("conde.nombre like " + Data.String2Sql(sNombre, true, true) + " and ");
-		
-		if (sDinastia != null)
-			sbWhere.append("conde.dinastia like " + Data.String2Sql(sDinastia, true, true) + " and ");
-		
-		if (iOrdenDinastico != null)
-			sbWhere.append("conde.ordenDinastico = " + iOrdenDinastico.intValue() + " and ");
-		
-		if (sEstatusSocial != null)
-			sbWhere.append("estatussocial.nombre like " + Data.String2Sql(sEstatusSocial, true, true) + " and ");
-		
-		if (sbWhere.length() > 0)
-			return "where " + sbWhere.substring(0, sbWhere.length()-5);
-		
-		return "";
-	}*/
-	
-	
 	/**
 	 * @param asFields nombre campos de la tabla que compondrán la claúsula where
 	 * @param aiTypes tipos SQL de los campos
 	 * @param aoValues valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
-	 * @return
+	 * @return cadena con la claúsula where formada, o cadena vacía si todos los valores eran null
 	 */
 	protected static String Where(String[] asFields, int[] aiTypes, Object[] aoValues) {
 		StringBuilder sbWhere = new StringBuilder();
