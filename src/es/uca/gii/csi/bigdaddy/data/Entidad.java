@@ -49,7 +49,7 @@ public class Entidad {
 	}
 	
 	/**
-	 * Elimina un registro de _sTabla
+	 * Elimina un registro de la tabla _sTabla
 	 */
 	public void Delete() throws Exception {
 		if (getIsDeleted())

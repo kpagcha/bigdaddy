@@ -28,15 +28,15 @@ public class EstatusSocial extends Entidad {
 		_sNombre = sNombre;
 	}
 	
-	private void Initialize(int iId, Connection connection) throws Exception {
-		
+	private void Initialize(int iId, Connection connection) throws Exception {	
 		Connection con = connection;
 		ResultSet rs = null;
 		
 		try {
-			Data.LoadDriver();
-			
-			con = Data.Connection();
+			if (con == null) {
+				Data.LoadDriver();
+				con = Data.Connection();
+			}
 			
 			String sConsulta = "select nombre from bigdaddy.estatussocial where id = " + iId;
 			rs = con.createStatement().executeQuery(sConsulta);
@@ -47,7 +47,7 @@ public class EstatusSocial extends Entidad {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
 		} finally {
-			if (con != null) con.close();
+			if (con != null && connection == null) con.close();
 			if (rs != null) rs.close();
 		}
 	}

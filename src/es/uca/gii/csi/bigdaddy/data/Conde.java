@@ -39,9 +39,10 @@ public class Conde extends Entidad {
 		ResultSet rs = null;
 		
 		try {
-			Data.LoadDriver();
-			
-			con = Data.Connection();
+			if (con == null) {
+				Data.LoadDriver();
+				con = Data.Connection();
+			}
 			
 			String sConsulta = "select nombre, dinastia, ordenDinastico, id_EstatusSocial from bigdaddy.conde where id = " + iId;
 			rs = con.createStatement().executeQuery(sConsulta);
@@ -55,7 +56,7 @@ public class Conde extends Entidad {
 				throw new Exception("El registro con la id=" + iId + " no existe");
 			}
 		} finally {
-			if (con != null) con.close();
+			if (con != null && connection == null) con.close();
 			if (rs != null) rs.close();
 		}
 	}
