@@ -2,7 +2,6 @@ package es.uca.gii.csi.bigdaddy.data;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,7 +186,7 @@ public class Conde extends Entidad {
 					"from bigdaddy.conde inner join estatussocial on conde.id_EstatusSocial = estatussocial.id " +
 					Where(
 						new String[] { "conde.nombre", "conde.dinastia", "conde.ordenDinastico", "estatussocial.nombre" },
-						new int[] { Types.VARCHAR, Types.VARCHAR, Types.INTEGER, Types.VARCHAR },
+						new Type[] { Type.Text, Type.Text, Type.Integer, Type.Text },
 						new Object[] { sNombre, sDinastia, iOrdenDinastico, sEstatusSocial});
 					
 			rs = con.createStatement().executeQuery(sSelect);

@@ -1,12 +1,13 @@
 package es.uca.gii.csi.bigdaddy.data;
 
 import java.sql.Connection;
-import java.sql.Types;
+import java.util.Date;
 
 public class Entidad {
 	private final int _iId;
 	private final String  _sTabla;
 	private boolean _bIsDeleted = false;
+	protected enum Type { Text, Integer, Real, Boolean, Date};
 	
 	protected Entidad(int iId, String sTabla) {
 		_iId = iId;
@@ -78,17 +79,30 @@ public class Entidad {
 	 * @param aoValue valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
 	 * @return cadena con la claúsula where formada, o cadena vacía si todos los valores eran null
 	 */
-	protected static String Where(String[] asField, int[] aiType, Object[] aoValue) {
+	protected static String Where(String[] asField, Type[] aiType, Object[] aoValue) {
 		StringBuilder sbWhere = new StringBuilder();
 		
 		int iLength = asField.length;
 		for (int i = 0; i < iLength; i++) {
 			Object o = aoValue[i];
 			if (aoValue[i] != null) {
-				if (aiType[i] == Types.VARCHAR)
-					sbWhere.append(asField[i] + " like " + Data.String2Sql((String)o, true, true));
-				else
-					sbWhere.append(asField[i] + " = " + o.getClass().cast(o));
+				switch (aiType[i]) {
+					case Text:
+						sbWhere.append(asField[i] + " like " + Data.String2Sql((String)o, true, true));
+						break;
+					case Integer:
+						sbWhere.append(asField[i] + " = " + ((Integer)o).intValue());
+						break;
+					case Real:
+						sbWhere.append(asField[i] + " = " + ((Float)o).floatValue());
+						break;
+					case Boolean:
+						sbWhere.append(asField[i] + " = " + ((Boolean)o).booleanValue());
+						break;
+					case Date:
+						sbWhere.append(asField[i] + " = " + (Date)o);
+						break;
+				}
 				sbWhere.append(" and ");
 			}
 		}
