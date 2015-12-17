@@ -73,21 +73,22 @@ public class Entidad {
 	}
 	
 	/**
-	 * @param asFields nombre campos de la tabla que compondrán la claúsula where
-	 * @param aiTypes tipos SQL de los campos
-	 * @param aoValues valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
+	 * @param asField nombre campos de la tabla que compondrán la claúsula where
+	 * @param aiType tipos SQL de los campos
+	 * @param aoValue valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
 	 * @return cadena con la claúsula where formada, o cadena vacía si todos los valores eran null
 	 */
-	protected static String Where(String[] asFields, int[] aiTypes, Object[] aoValues) {
+	protected static String Where(String[] asField, int[] aiType, Object[] aoValue) {
 		StringBuilder sbWhere = new StringBuilder();
 		
-		for (int i = 0; i < asFields.length; i++) {
-			Object o = aoValues[i];
-			if (aoValues[i] != null) {
-				if (aiTypes[i] == Types.VARCHAR)
-					sbWhere.append(asFields[i] + " like " + Data.String2Sql((String)o, true, true));
+		int iLength = asField.length;
+		for (int i = 0; i < iLength; i++) {
+			Object o = aoValue[i];
+			if (aoValue[i] != null) {
+				if (aiType[i] == Types.VARCHAR)
+					sbWhere.append(asField[i] + " like " + Data.String2Sql((String)o, true, true));
 				else
-					sbWhere.append(asFields[i] + " = " + o.getClass().cast(o));
+					sbWhere.append(asField[i] + " = " + o.getClass().cast(o));
 				sbWhere.append(" and ");
 			}
 		}
