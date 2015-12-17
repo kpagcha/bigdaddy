@@ -187,7 +187,7 @@ public class Conde extends Entidad {
 					Where(
 						new String[] { "conde.nombre", "conde.dinastia", "conde.ordenDinastico", "estatussocial.nombre" },
 						new Type[] { Type.Text, Type.Text, Type.Integer, Type.Text },
-						new Object[] { sNombre, sDinastia, iOrdenDinastico, sEstatusSocial});
+						new Object[] { sNombre, sDinastia, iOrdenDinastico, sEstatusSocial });
 					
 			rs = con.createStatement().executeQuery(sSelect);
 			

@@ -1,6 +1,7 @@
 package es.uca.gii.csi.bigdaddy.data;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Entidad {
@@ -94,13 +95,13 @@ public class Entidad {
 						sbWhere.append(asField[i] + " = " + ((Integer)o).intValue());
 						break;
 					case Real:
-						sbWhere.append(asField[i] + " = " + ((Float)o).floatValue());
+						sbWhere.append(asField[i] + " = " + ((Double)o).doubleValue());
 						break;
 					case Boolean:
 						sbWhere.append(asField[i] + " = " + ((Boolean)o).booleanValue());
 						break;
 					case Date:
-						sbWhere.append(asField[i] + " = " + (Date)o);
+						sbWhere.append(asField[i] + " = " + Data.Date2Sql((Date)o, true));
 						break;
 				}
 				sbWhere.append(" and ");
