@@ -1,7 +1,6 @@
 package es.uca.gii.csi.bigdaddy.data;
 
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Entidad {
