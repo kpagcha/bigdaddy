@@ -2,7 +2,6 @@ package es.uca.gii.csi.bigdaddy.test;
 
 import es.uca.gii.csi.bigdaddy.data.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -19,7 +18,7 @@ public class TestTest {
 	@org.junit.Test
 	public void test() {
 		try {
-			List<Test> a = Test.Select(null, null, null, null, new SimpleDateFormat("dd-MM-yyyy").parse("05-08-2015"));
+			List<Test> a = Test.Select("ho", null, 899.9, true, null);
 
 			for (Test t : a) {
 				System.out.println(t);

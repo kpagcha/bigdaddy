@@ -186,7 +186,7 @@ public class Conde extends Entidad {
 					"from bigdaddy.conde inner join estatussocial on conde.id_EstatusSocial = estatussocial.id " +
 					Where(
 						new String[] { "conde.nombre", "conde.dinastia", "conde.ordenDinastico", "estatussocial.nombre" },
-						new Type[] { Type.Text, Type.Text, Type.Integer, Type.Text },
+						new EType[] { EType.Text, EType.Text, EType.Integer, EType.Text },
 						new Object[] { sNombre, sDinastia, iOrdenDinastico, sEstatusSocial });
 					
 			rs = con.createStatement().executeQuery(sSelect);

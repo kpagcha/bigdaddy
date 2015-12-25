@@ -30,7 +30,7 @@ public class Test extends Entidad {
 		return "Text: " + _s + "; Integer: " + _i + "; Float: " + _f + "; Boolean: " + _b + "; Date: " + _d; 
 	}
 	
-	public static List<Test> Select(String s, Integer i, Float f, Boolean b, Date d) throws Exception {
+	public static List<Test> Select(String s, Integer i, Double d, Boolean b, Date date) throws Exception {
 		List<Test> aResultadoBusqueda = new ArrayList<Test>();
 		
 		Connection con = null;
@@ -44,8 +44,8 @@ public class Test extends Entidad {
 			String sSelect = "select `text`, `integer`, `real`, `boolean`, `date` from bigdaddy.test " +
 					Where(
 						new String[] { "test.text", "test.integer", "test.real", "test.boolean", "test.date" },
-						new Type[] { Type.Text, Type.Integer, Type.Real, Type.Boolean, Type.Date },
-						new Object[] { s, i, f, b, d });
+						new EType[] { EType.Text, EType.Integer, EType.Real, EType.Boolean, EType.Date },
+						new Object[] { s, i, d, b, date });
 			
 			System.out.println(sSelect);
 					

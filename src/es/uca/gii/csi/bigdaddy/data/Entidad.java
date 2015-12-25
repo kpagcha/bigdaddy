@@ -7,7 +7,7 @@ public class Entidad {
 	private final int _iId;
 	private final String  _sTabla;
 	private boolean _bIsDeleted = false;
-	protected enum Type { Text, Integer, Real, Boolean, Date};
+	protected enum EType { Text, Integer, Real, Boolean, Date};
 	
 	protected Entidad(int iId, String sTabla) {
 		_iId = iId;
@@ -79,7 +79,7 @@ public class Entidad {
 	 * @param aoValue valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
 	 * @return cadena con la claúsula where formada, o cadena vacía si todos los valores eran null
 	 */
-	protected static String Where(String[] asField, Type[] aiType, Object[] aoValue) {
+	protected static String Where(String[] asField, EType[] aiType, Object[] aoValue) {
 		StringBuilder sbWhere = new StringBuilder();
 		
 		int iLength = asField.length;
@@ -94,7 +94,10 @@ public class Entidad {
 						sbWhere.append(asField[i] + " = " + ((Integer)o).intValue());
 						break;
 					case Real:
-						sbWhere.append(asField[i] + " = " + ((Double)o).doubleValue());
+						double dValue = ((Double)o).doubleValue();
+						double dThreshold = 0.001;
+						sbWhere.append(asField[i] + " > " + (dValue - dValue * dThreshold) + " and " +
+							asField[i] + " < " + (dValue + dValue * dThreshold));
 						break;
 					case Boolean:
 						sbWhere.append(asField[i] + " = " + ((Boolean)o).booleanValue());
