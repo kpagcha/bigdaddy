@@ -18,7 +18,7 @@ public class TestTest {
 	@org.junit.Test
 	public void test() {
 		try {
-			List<Test> a = Test.Select("ho", null, 899.9, true, null);
+			List<Test> a = Test.Select("ho", 20, 900.0019, true, null);
 
 			for (Test t : a) {
 				System.out.println(t);

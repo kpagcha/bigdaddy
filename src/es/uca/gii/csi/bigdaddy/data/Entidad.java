@@ -95,9 +95,8 @@ public class Entidad {
 						break;
 					case Real:
 						double dValue = ((Double)o).doubleValue();
-						double dThreshold = 0.001;
-						sbWhere.append(asField[i] + " > " + (dValue - dValue * dThreshold) + " and " +
-							asField[i] + " < " + (dValue + dValue * dThreshold));
+						double dDecimals = 0.001;
+						sbWhere.append(asField[i] + " between " + (dValue - dDecimals) + " and " + (dValue + dDecimals));
 						break;
 					case Boolean:
 						sbWhere.append(asField[i] + " = " + ((Boolean)o).booleanValue());
