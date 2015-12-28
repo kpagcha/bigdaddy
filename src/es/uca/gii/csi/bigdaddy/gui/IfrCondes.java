@@ -20,6 +20,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyVetoException;
+
 import javax.swing.JComboBox;
 
 public class IfrCondes extends JInternalFrame {
@@ -114,11 +116,22 @@ public class IfrCondes extends JInternalFrame {
 					
 					Conde conde = ((CondesTableModel)table.getModel()).getData(iRow);
 					
-					if (conde != null) {
+					if (conde != null && FrmMain.IfrConde(conde.getId()) == null) {
 						IfrConde ifrConde = new IfrConde(conde);
+						
 						ifrConde.setBounds(20, 20, 470, 250);
 						pnlParent.add(ifrConde, 0);
 						ifrConde.setVisible(true);
+						
+						FrmMain.AddIfrConde(conde.getId(), ifrConde);
+					} else {
+						IfrConde ifrConde = FrmMain.IfrConde(conde.getId());
+						ifrConde.moveToFront();
+						try {
+							ifrConde.setSelected(true);
+						} catch (PropertyVetoException e) {
+							JOptionPane.showMessageDialog(null, e.getMessage());
+						}
 					}
 				}
 			}

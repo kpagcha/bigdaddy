@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-12-2015 a las 10:38:16
+-- Tiempo de generación: 28-12-2015 a las 12:32:25
 -- Versión del servidor: 5.6.17
 -- Versión de PHP: 5.5.12
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `conde` (
   KEY `estatus` (`id_EstatusSocial`),
   KEY `nombre` (`nombre`),
   KEY `dinastia` (`dinastia`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Volcado de datos para la tabla `conde`
@@ -114,29 +114,6 @@ INSERT INTO `estatussocial` (`id`, `nombre`) VALUES
 (4, 'Burgués'),
 (3, 'Monarca'),
 (1, 'Noble');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `test`
---
-
-DROP TABLE IF EXISTS `test`;
-CREATE TABLE IF NOT EXISTS `test` (
-  `text` varchar(64) NOT NULL,
-  `integer` int(11) NOT NULL,
-  `real` float NOT NULL,
-  `boolean` tinyint(1) NOT NULL,
-  `date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `test`
---
-
-INSERT INTO `test` (`text`, `integer`, `real`, `boolean`, `date`) VALUES
-('texto1', 10, 10.1, 1, '2015-12-09'),
-('teeeexto', 20, 0.9, 0, '2015-08-05');
 
 --
 -- Restricciones para tablas volcadas

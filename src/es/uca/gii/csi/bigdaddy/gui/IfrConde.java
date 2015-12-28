@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 public class IfrConde extends JInternalFrame {
 	
@@ -136,6 +138,14 @@ public class IfrConde extends JInternalFrame {
 		
 		getContentPane().add(cmbEstatusSocial, "2, 16, fill, default");
 		getContentPane().add(butGuardar, "2, 18, left, default");
+		
+		addInternalFrameListener(new InternalFrameAdapter() {
+			@Override
+			public void internalFrameClosed(InternalFrameEvent arg0) {
+				if (_conde != null)
+					FrmMain.RemoveIfrConde(_conde.getId());
+			}
+		});
 	}
 
 }

@@ -9,11 +9,14 @@ import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 
 public class FrmMain {
 
 	private JFrame frame;
+	private final static Map<Integer, IfrConde> _ShtIfrConde = new HashMap<Integer, IfrConde>();
 
 	/**
 	 * Launch the application.
@@ -84,6 +87,18 @@ public class FrmMain {
 		});
 		mitBuscar.add(mitBuscarConde);
 		frame.getContentPane().setLayout(null);
+	}
+	
+	public static IfrConde IfrConde(int iId) {
+		return _ShtIfrConde.get(iId);
+	}
+	
+	public static void AddIfrConde(int iId, IfrConde ifrConde) {
+		_ShtIfrConde.put(iId, ifrConde);
+	}
+	
+	public static void RemoveIfrConde(int iId) {
+		_ShtIfrConde.remove(iId);
 	}
 
 }
