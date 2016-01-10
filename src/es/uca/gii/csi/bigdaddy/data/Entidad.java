@@ -7,7 +7,7 @@ public class Entidad {
 	private final int _iId;
 	private final String  _sTabla;
 	private boolean _bIsDeleted = false;
-	protected enum EType { Text, Integer, Real, Boolean, Date};
+	protected enum EType { Text, Integer, Real, Boolean, Date };
 	
 	protected Entidad(int iId, String sTabla) {
 		_iId = iId;
@@ -85,7 +85,7 @@ public class Entidad {
 		int iLength = asField.length;
 		for (int i = 0; i < iLength; i++) {
 			Object o = aoValue[i];
-			if (aoValue[i] != null) {
+			if (o != null) {
 				switch (aiType[i]) {
 					case Text:
 						sbWhere.append(asField[i] + " like " + Data.String2Sql((String)o, true, true));
@@ -110,7 +110,7 @@ public class Entidad {
 		}
 		
 		if (sbWhere.length() > 0)
-			return "where " + sbWhere.substring(0, sbWhere.length()-5);
+			return "where " + sbWhere.substring(0, sbWhere.length() - 5);
 		
 		return "";
 	}
