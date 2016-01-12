@@ -79,14 +79,14 @@ public class Entidad {
 	 * @param aoValue valores de los campos; si uno de ellos es null, no se incluirá el campo en la consulta
 	 * @return cadena con la claúsula where formada, o cadena vacía si todos los valores eran null
 	 */
-	protected static String Where(String[] asField, EType[] aiType, Object[] aoValue) {
+	protected static String Where(String[] asField, EType[] aType, Object[] aoValue) {
 		StringBuilder sbWhere = new StringBuilder();
 		
 		int iLength = asField.length;
 		for (int i = 0; i < iLength; i++) {
 			Object o = aoValue[i];
 			if (o != null) {
-				switch (aiType[i]) {
+				switch (aType[i]) {
 					case Text:
 						sbWhere.append(asField[i] + " like " + Data.String2Sql((String)o, true, true));
 						break;
